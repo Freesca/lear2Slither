@@ -16,7 +16,10 @@ yet ratified (gates T1-T4); they exist so the program runs end-to-end. Only
 the implemented strategies ("epsilon_greedy", constant alpha) are accepted --
 the candidate alternatives raise a clear error naming their gate.
 """
-import tomllib
+try:
+    import tomllib  # Python 3.11+
+except ModuleNotFoundError:  # Python 3.10 (school machines): tomli backport
+    import tomli as tomllib
 from copy import deepcopy
 from dataclasses import dataclass, field
 

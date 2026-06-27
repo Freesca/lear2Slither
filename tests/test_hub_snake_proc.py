@@ -8,7 +8,10 @@ events out, malformed line raises so the caller can fail just that job).
 """
 import os
 import sys
-import tomllib
+try:
+    import tomllib  # Python 3.11+
+except ModuleNotFoundError:  # Python 3.10
+    import tomli as tomllib
 
 import pytest
 

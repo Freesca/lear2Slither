@@ -92,7 +92,9 @@ background job pool at the bottom.
 
 ## Requirements
 
-- Python 3.11 or newer (the config loader uses the stdlib `tomllib`)
+- Python 3.10 or newer. On 3.11+ the config loader uses the stdlib
+  `tomllib`; on 3.10 it falls back to the `tomli` backport (installed
+  automatically by `requirements.txt` on 3.10 only).
 - `pygame-ce`
 
 Install runtime dependencies:
