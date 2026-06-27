@@ -1,20 +1,20 @@
-"""Configuration: built-in defaults, TOML load, merge, validation. (Phase 5)
+"""Configuration: built-in defaults, TOML load, merge, validation.
 
 The only module that knows TOML exists. It produces one frozen ``Config``
 from three layers, in increasing precedence:
 
     built-in DEFAULTS  <  -config file  <  CLI override dict
 
-(implementation-plan.md sec. 5). The defaults mirror ``configs/default.toml``
-exactly -- a test pins them together so they cannot drift. The frozen Config
-hands the rest of the program ready-made ``interpreter.Rewards`` and
-``agent.Hyperparameters`` objects, so env / interpreter / agent each receive
-exactly what they need and nothing more.
+The defaults mirror ``configs/default.toml`` exactly -- a test pins them
+together so they cannot drift. The frozen Config hands the rest of the
+program ready-made ``interpreter.Rewards`` and ``agent.Hyperparameters``
+objects, so env / interpreter / agent each receive exactly what they need
+and nothing more.
 
-PROVISIONAL note: the [rewards], [exploration] and [learning] values are not
-yet ratified (gates T1-T4); they exist so the program runs end-to-end. Only
-the implemented strategies ("epsilon_greedy", constant alpha) are accepted --
-the candidate alternatives raise a clear error naming their gate.
+The [rewards], [exploration] and [learning] values are provisional defaults
+so the program runs end-to-end. Only the implemented strategies
+("epsilon_greedy", constant alpha) are accepted; the candidate alternatives
+raise a clear error.
 """
 try:
     import tomllib  # Python 3.11+
@@ -39,7 +39,7 @@ DEFAULTS = {
     },
     "state": {
         "warn": True,        # d: obstacle at distance 2
-        "caution": False,    # c: obstacle at distance 3 (new distinction)
+        "caution": False,    # c: obstacle at distance 3
         "green_far": True,   # split green into close G / far g
         "red_far": True,     # split red into close R / far r
         "body_far": False,   # b: a far obstacle that is body, not wall
@@ -72,7 +72,7 @@ DEFAULTS = {
     },
 }
 
-# Strategies the code actually implements; others name their gate on error.
+# Strategies the code actually implements; others raise a clear error.
 _IMPLEMENTED_EXPLORATION = {"epsilon_greedy"}
 _IMPLEMENTED_ALPHA = {"constant"}
 
@@ -127,7 +127,7 @@ def load(path=None, overrides=None):
 
     ``path`` is an optional TOML file; ``overrides`` an optional nested dict
     (the highest-precedence layer). Unknown sections/keys and out-of-range
-    values raise ``ValueError`` (Phase 9 wraps these into a clean message).
+    values raise ``ValueError``.
     """
     merged = deepcopy(DEFAULTS)
     if path is not None:

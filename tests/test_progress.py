@@ -1,4 +1,4 @@
-"""Phase 7 tests: the -progress JSON-lines stream (the hub contract, GATE H1).
+"""Tests for the -progress JSON-lines stream (the hub contract).
 
 Golden exact strings for the deterministic lines (start, session), structural
 checks for the float-bearing summary, and a CLI integration test proving

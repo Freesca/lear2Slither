@@ -1,4 +1,4 @@
-"""Phase 5 tests: config defaults, file/override precedence, validation."""
+"""Tests for config defaults, file/override precedence, validation."""
 try:
     import tomllib  # Python 3.11+
 except ModuleNotFoundError:  # Python 3.10
@@ -26,7 +26,7 @@ def test_defaults_build_a_valid_config():
 
 def test_default_toml_mirrors_builtin_defaults():
     # The committed default.toml must equal the in-code DEFAULTS so the two
-    # can never drift (implementation-plan.md sec. 5).
+    # can never drift.
     with open(DEFAULT_TOML, "rb") as handle:
         on_disk = tomllib.load(handle)
     assert on_disk == cfg.DEFAULTS

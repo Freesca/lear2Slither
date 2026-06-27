@@ -1,12 +1,12 @@
-"""Agent: sparse Q-table, epsilon-greedy policy, Bellman update. (Phase 4)
+"""Agent: sparse Q-table, epsilon-greedy policy, Bellman update.
 
 The agent receives only ``(canonical_state, reward)`` and answers with a
 column index 0-3 -- it is ignorant of boards, directions, pygame, and files,
-which is the structural half of the -42 firewall (state-design.md sec. 5).
-The four columns match ``interpreter.RelativeAction`` (FORWARD, LEFT, RIGHT,
-BACKWARDS), but the agent never imports that enum: it stays purely numeric.
+which is the structural half of the -42 firewall. The four columns match
+``interpreter.RelativeAction`` (FORWARD, LEFT, RIGHT, BACKWARDS), but the
+agent never imports that enum: it stays purely numeric.
 
-Theory (training-design.md, implementation-plan.md sec. 4.4):
+Theory:
 
 - A Q-value estimates the expected discounted return of taking an action in a
   state and acting greedily afterwards. Learning nudges each value toward the
@@ -31,7 +31,7 @@ NUM_ACTIONS = 4
 
 @dataclass(frozen=True)
 class Hyperparameters:
-    """The agent's learning + exploration knobs (from config in Phase 5)."""
+    """The agent's learning + exploration knobs."""
 
     alpha: float           # learning rate: fraction of the TD error applied
     gamma: float           # discount: weight on the bootstrapped future
@@ -48,7 +48,7 @@ class Agent:
         self.hp = hyperparameters
         self.rng = rng                       # one seeded Random for the run
         # Sparse tables: a row exists only once the agent has met that state.
-        # model_io (Phase 5) passes loaded dicts here to resume training.
+        # model_io passes loaded dicts here to resume training.
         self.q = q if q is not None else {}
         self.n = n if n is not None else {}
         self.sessions_trained = sessions_trained
@@ -97,7 +97,7 @@ class Agent:
         With probability epsilon, explore uniformly over all four columns
         (BACKWARDS included -- its lethality is learned, not forbidden);
         otherwise exploit the greedy action. ``eval_mode`` forces epsilon = 0
-        for frozen-model evaluation (evaluation-design.md sec. 1).
+        for frozen-model evaluation.
         """
         epsilon = 0.0 if eval_mode else self.epsilon
         if self.rng.random() < epsilon:
@@ -107,7 +107,7 @@ class Agent:
     def _argmax(self, row):
         """Greedy column, breaking ties at random: with zero-init many values
         tie, and a naive argmax would always take column 0, skewing early
-        exploration (training-design.md hygiene)."""
+        exploration."""
         best = max(row)
         winners = [i for i, value in enumerate(row) if value == best]
         return self.rng.choice(winners)
@@ -119,8 +119,8 @@ class Agent:
 
         Non-terminal target = r + gamma * max(Q[s_next]) (bootstrap on the
         best next value); terminal target = r (no successor -> no bootstrap,
-        so ``s_next`` is ignored). Constant-alpha update; the N counters kept
-        here also fund the GATE-T3 alternative alpha = 1/N(s, a) later.
+        so ``s_next`` is ignored). Constant-alpha update; the N counters here
+        record how often each (state, action) pair has been updated.
         """
         self._ensure(s)
         if terminal:

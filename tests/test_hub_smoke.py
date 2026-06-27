@@ -1,4 +1,4 @@
-"""Milestone-A review gate: the real ./snake end-to-end contract.
+"""Smoke test: the real ./snake end-to-end contract.
 
 Unlike the unit tests (which use fake children), this spawns the actual
 ``python -m slither`` through the full JobManager + snake_proc path: a short

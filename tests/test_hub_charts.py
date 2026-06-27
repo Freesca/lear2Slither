@@ -1,9 +1,9 @@
-"""Milestone-B tests: chart geometry (snake_den/charts.py).
+"""Tests for chart geometry (snake_den/charts.py).
 
 Pure data->pixel math, so it is tested without a display (no pygame import --
-keeps slither's headless invariant safe). Covers the data->screen-coord mapping
-the B1 DoD calls out: endpoints, the inverted y axis, single/empty series, flat
-ranges, the zero baseline for bars, and the matrix grid.
+keeps slither's headless invariant safe). Covers the data->screen-coord
+mapping: endpoints, the inverted y axis, single/empty series, flat ranges, the
+zero baseline for bars, and the matrix grid.
 """
 import subprocess
 import sys

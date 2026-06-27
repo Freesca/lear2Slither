@@ -1,25 +1,25 @@
-"""Runner: session loop, stats, terminal output, mode switches. (Phase 5)
+"""Runner: session loop, stats, terminal output, mode switches.
 
 The only module that sees the whole cast (env, vision, interpreter, agent,
-model_io). It owns the tick loop from implementation-plan.md sec. 4.2 and the
-session loop around it, and is where the run's mode flags take effect:
+model_io). It owns the tick loop and the session loop around it, and is where
+the run's mode flags take effect:
 
 - learning      -- update Q (off under -dontlearn)
-- eval_mode     -- epsilon = 0 greedy (on under -dontlearn; eval-design sec. 1)
-- demo          -- print the vision cross + chosen action each move (GATE O1:
-                   only under -visual on or -step-by-step)
+- eval_mode     -- epsilon = 0 greedy (on under -dontlearn)
+- demo          -- print the vision cross + chosen action each move (only
+                   under -visual on or -step-by-step)
 - step_by_step  -- wait before each move (Enter in the terminal; SPACE in the
                    -visual window, handled by the gui.Presenter)
 
 The step cap (config.evaluation.step_cap) bounds every session in every mode
-(livelock guard, evaluation-design.md sec. 4). Hitting it is a *truncation*,
-not a death: the final transition still bootstraps, so we never teach the
-agent that surviving long leads to a dead end.
+(livelock guard). Hitting it is a *truncation*, not a death: the final
+transition still bootstraps, so we never teach the agent that surviving long
+leads to a dead end.
 
-GUI note (Phase 7): -visual on builds a ``gui.Presenter`` (imported lazily, so
-``-visual off`` and pytest never import pygame -- the headless-safety
-invariant). The presenter owns the window/events; the runner only sends it the
-board + a status line and reads back an intent (advance / quit).
+GUI: -visual on builds a ``gui.Presenter`` (imported lazily, so ``-visual
+off`` and pytest never import pygame -- the headless-safety invariant). The
+presenter owns the window/events; the runner only sends it the board + a
+status line and reads back an intent (advance / quit).
 """
 import random
 from dataclasses import dataclass
@@ -46,7 +46,7 @@ class RunOptions:
 
 @dataclass
 class SessionResult:
-    """One game's headline facts (Phase 6's -stats aggregates these)."""
+    """One game's headline facts (-stats aggregates these)."""
 
     max_length: int
     duration: int
@@ -60,14 +60,14 @@ def run(config, options, *, quiet=False, progress=False):
     Builds the shared RNG, environment and agent (loading a model first if
     asked), plays each session, prints the per-session ``Game over`` line, and
     saves at the end if asked. Returns the list of SessionResult for callers
-    (Phase 6's -stats) to aggregate.
+    (-stats) to aggregate.
 
     ``quiet`` suppresses every stdout line (per-game, load, save) without
     changing the run itself -- used by ``evaluate.compare`` so a multi-model
     suite prints only its final table, not hundreds of games.
 
-    ``progress`` (GATE H1, the hub contract) replaces the human lines with
-    JSON-lines: a ``start`` event, one ``session`` event per game (the CLI adds
+    ``progress`` (the hub contract) replaces the human lines with JSON-lines:
+    a ``start`` event, one ``session`` event per game (the CLI adds
     the closing ``summary``). It also forces the per-move demo print off so the
     stream stays pure JSON. ``quiet`` and ``progress`` are mutually exclusive
     in practice; either one silences the human output.
@@ -228,9 +228,9 @@ _REL_ARROWS = ("^F", "<L", ">R", "vB")     # relative action: F / L / R / B
 def _status_fields(session_index, env, agent, eval_mode, steps, state, action):
     """The window's status as (label, value) pairs; gui lays out the readout.
 
-    Structured (not a pre-joined string) so the renderer can align it into the
-    quiet two-column readout of the original (DESIGN 5.1); the Presenter adds
-    its own SPEED field. ``EPS`` is the agent's exploration rate (train only).
+    Structured (not a pre-joined string) so the renderer can align it into a
+    two-column readout; the Presenter adds its own SPEED field. ``EPS`` is the
+    agent's exploration rate (train only).
     ``STATE`` + ``ACTION`` (the relative arrow matching the Q-table's boxed
     column) show what the agent perceived and chose this step -- display only.
     """
@@ -274,8 +274,9 @@ def _print_move(rays, absolute):
 def _wait_for_step():
     """Block until the user presses Enter (terminal step-by-step mode).
 
-    SPACE-in-the-GUI is Phase 7; here we read stdin. On EOF (piped or
-    non-interactive input) we simply proceed rather than crash or hang.
+    In the terminal we read stdin; the GUI handles its own SPACE stepping. On
+    EOF (piped or non-interactive input) we simply proceed rather than crash
+    or hang.
     """
     try:
         input()

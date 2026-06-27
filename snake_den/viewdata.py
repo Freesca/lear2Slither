@@ -1,9 +1,9 @@
-"""View data: pure prep for the Q-table views. (Phase B3 / rework)
+"""View data: pure prep for the Q-table views.
 
 Pygame-free, so the screens' data logic is unit-testable without a display (and
 the hub suite stays display-free -- slither's rule). The pygame screens only
 render what these functions return. Reads model files via
-``slither.model_io`` (pure, H4) and mirrors the state alphabet via
+``slither.model_io`` (pure) and mirrors the state alphabet via
 ``snake_den.scheme``; no execution code is touched.
 """
 from slither import model_io

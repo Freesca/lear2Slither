@@ -1,4 +1,4 @@
-"""Models tab: the model list + a model's detail view. (rework)
+"""Models tab: the model list + a model's detail view.
 
 Merges the old Home + Registry. The **list** shows every registered model with
 a policy-fingerprint glyph and an evaluated badge under the selected suite
@@ -36,9 +36,9 @@ def _summary_current(entry):
 def _glyph_color(letter):
     """The decoded colour of one state symbol (the legend, calm tints).
 
-    Calmed 2026-06-24 to match the Q-value tints: green family -> Q_POS,
-    danger/red family -> Q_NEG, soft warnings (d/c) -> MUTED. Gold is no longer
-    spent on a glyph -- it stays reserved for active/greedy marks (DESIGN 5.2).
+    Matched to the Q-value tints: green family -> Q_POS, danger/red family ->
+    Q_NEG, soft warnings (d/c) -> MUTED. Gold is not spent on a glyph -- it
+    stays reserved for active/greedy marks.
     """
     if letter in "Gg":
         return widgets.Q_POS
@@ -335,8 +335,8 @@ class ModelsScreen(Screen):
         surface.set_clip(clip)
 
     def _minimap(self, surface, ui, top):
-        """Interactive policy map beside the table (D2): the same value-tint as
-        the list glyph, built live from the rows in the current sort so a click
+        """Interactive policy map beside the table: the same value-tint as the
+        list glyph, built live from the rows in the current sort so a click
         jumps the table to that state under any sort. One block per state:
         green where the greedy value is positive, magenta where it is negative.
         """

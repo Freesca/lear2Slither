@@ -1,4 +1,4 @@
-"""Phase 5 tests: CLI parsing, flag correctness, and end-to-end wiring."""
+"""Tests for CLI parsing, flag correctness, and end-to-end wiring."""
 import pytest
 
 from slither import cli

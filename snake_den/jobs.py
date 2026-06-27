@@ -1,25 +1,24 @@
-"""JobManager: the worker pool that spawns and supervises ./snake. (Phase A2)
+"""JobManager: the worker pool that spawns and supervises ./snake.
 
-The hub-design.md sec. 3.1 threading model. The UI's main thread owns a 60 FPS
-loop and must never block on subprocess I/O, so each running child gets daemon
-*reader threads* that do the blocking reads and hand structured events to the
-main thread through a thread-safe ``queue.Queue``; the UI drains the queue each
-frame (``poll``). ``select()`` on pipes is unavailable on Windows, so a
-blocking read on a dedicated thread is the portable choice (works the same on
-the Linux defense box).
+The UI's main thread owns a 60 FPS loop and must never block on subprocess
+I/O, so each running child gets daemon *reader threads* that do the blocking
+reads and hand structured events to the main thread through a thread-safe
+``queue.Queue``; the UI drains the queue each frame (``poll``). ``select()``
+on pipes is unavailable on Windows, so a blocking read on a dedicated thread
+is the portable choice (works the same on the Linux defense box).
 
 Two reader threads per child, not one: stdout carries the parsed ``-progress``
 stream, while stderr is drained into a bounded tail. Draining stderr on its own
 thread matters -- if a crashing child dumps a large traceback and nobody reads
-that pipe, its OS buffer fills and the child blocks forever (a hang = the
-grade-0 no-crash rule). All *job-state* mutation happens on the main thread in
+that pipe, its OS buffer fills and the child blocks forever (a hang violates
+the no-crash rule). All *job-state* mutation happens on the main thread in
 ``poll``/``stop``/``shutdown``; the reader threads only ``put`` onto the queue
 and ``append`` to a deque (both thread-safe), so no locks are needed.
 
-Lifecycle (hub-design.md sec. 3.4): ``queued -> running -> finished | failed |
-stopped``. **finished** = exit 0 *and* a summary parsed; **failed** = non-zero
-exit, no summary, or a malformed line (caught -- a bad child fails only its own
-job, never the hub); **stopped** = user kill (terminate -> kill after a grace
+Lifecycle: ``queued -> running -> finished | failed | stopped``.
+**finished** = exit 0 *and* a summary parsed; **failed** = non-zero exit, no
+summary, or a malformed line (caught -- a bad child fails only its own job,
+never the hub); **stopped** = user kill (terminate -> kill after a grace
 period -> join the readers, so no orphan survives).
 """
 import collections
@@ -163,7 +162,7 @@ class JobManager:
         job.status = STOPPED
 
     def watch(self, spec):
-        """Spawn a detached, interactive ./snake -visual on window (H6).
+        """Spawn a detached, interactive ./snake -visual on window.
 
         Not a pool job: it takes no slot, has no reader threads and is not
         parsed (it has its own pygame window). Tracked loosely so it is torn

@@ -1,4 +1,4 @@
-"""Immediate-mode widget kit, pixel-art skin. (Phase B1 / Milestone C, H5)
+"""Immediate-mode widget kit, pixel-art skin.
 
 Hand-rolled widgets so the hub keeps its runtime dependency to pygame-ce only.
 "Immediate mode": a screen rebuilds its UI every frame by calling widget
@@ -6,13 +6,11 @@ functions that both draw and report interaction, reading this frame's input
 from a shared :class:`UI` context. Retained state some widgets need (text-field
 focus, which dropdown is open) lives in ``UI`` keyed by a caller-supplied id.
 
-Retro skin (Milestone C): the identity comes from **blocky beveled widgets**
-(no rounded corners; light/dark 1px bevels) and a retro palette -- not from the
-font. Text is the bundled font rendered crisply at full size (no asset file ->
-fresh-clone safe, no licensing). (An earlier nearest-neighbour upscale of a
-tiny font was too rough to read, so it was dropped -- the blocks carry the
-look, the text stays legible.) The skin is a pure render-layer change: every
-signature is unchanged, so the screens -- and the jobs -- are untouched.
+Retro skin: the identity comes from **blocky beveled widgets** (no rounded
+corners; light/dark 1px bevels) and a retro palette -- not from the font. Text
+is the bundled font rendered crisply at full size (no asset file -> fresh-clone
+safe, no licensing). The skin is a pure render-layer change: every signature is
+unchanged, so the screens -- and the jobs -- are untouched.
 
 This module imports pygame, so -- like gui.py -- no test imports it; the
 geometry it draws is the pygame-free charts.py, which is tested.
@@ -21,15 +19,14 @@ import pygame
 
 from snake_den import charts
 
-# Snake-Byte cabinet palette (DESIGN.md sec. 2). Duplicated here by hand (the
-# -42 firewall forbids a shared theme import with slither/gui.py); kept in sync
-# against DESIGN.md sec. 2 -- ~14 constants, cheap to mirror. The legacy widget
-# names (BG/TEXT/ACCENT/GOOD/BAD) keep their roles, only their values change,
-# so every widget signature and call site is untouched (a pure render swap).
+# Snake-Byte cabinet palette, duplicated here by hand: the -42 firewall forbids
+# a shared theme import with slither/gui.py, so these constants are mirrored
+# rather than imported. The widget names (BG/TEXT/ACCENT/GOOD/BAD) keep their
+# roles; only their values change, so every call site is untouched.
 BLACK = (0, 0, 0)
 CABINET_GOLD = (173, 139, 58)
 DITHER_BLUE = (92, 92, 200)
-SNAKE_LIME = (140, 165, 45)              # retuned 2026-06-24: less fluorescent
+SNAKE_LIME = (140, 165, 45)              # less fluorescent than the original
 SNAKE_HEAD = (200, 224, 110)
 APPLE_GREEN = (80, 175, 55)              # dimmer than the original bright dot
 APPLE_RED = (208, 72, 140)
@@ -62,15 +59,15 @@ TAB_H = 32                  # nav tab row beneath it
 CONTENT_TOP = TITLE_H + TAB_H + 14      # first y a screen may draw content
 FOOTER_H = 96               # persistent job-pool strip at the bottom
 CONTENT_BOTTOM = HEIGHT - FOOTER_H
-RAIL_W = 8                  # thin dithered cabinet side rail (sec. 4.1/5.3)
+RAIL_W = 8                  # thin dithered cabinet side rail
 
 # --- 8x8 bitmap font: the Atari 8-bit OS ROM character set ($E000), thinned -
-# The font Snake Byte itself used; its ROM strokes are 2px (bold), so they are
-# thinned to 1px here to match the original's hairline weight (snake_byte.png).
-# Printable ASCII 0x20..0x7E, pre-mapped from Atari internal/screen-code order
-# into ASCII, bit-reversed (LSB = leftmost). 8x8 bitmap data is uncopyrightable
-# (data, not outlines); via kenjennings/Atari-Font-To-Code. Duplicated verbatim
-# in slither/gui.py (the -42 firewall bars a shared import) -- static data.
+# The font Snake Byte itself used; its ROM strokes are 2px (bold), thinned to
+# 1px here to match the original's hairline weight. Printable ASCII 0x20..0x7E,
+# pre-mapped from Atari internal/screen-code order into ASCII, bit-reversed
+# (LSB = leftmost). 8x8 bitmap data is uncopyrightable (data, not outlines);
+# via kenjennings/Atari-Font-To-Code. Duplicated verbatim in slither/gui.py
+# (the -42 firewall bars a shared import).
 _FONT_ATARI = (
     "00000000000000000008080808000800002222220000000000227f22227f2200083c021c"
     "201e080000221208042222001824180c72224c0000080808000000000030180808183000"
@@ -147,8 +144,8 @@ def make_font(size=2, advance=6):
     """A bitmap font at integer ``size`` (pixel scale) and ``advance``.
 
     ``advance`` is the per-glyph source-cell width: 6 packs dense data tight, 7
-    gives chrome (tabs/title/buttons) the machine-output breathing room
-    (DESIGN 3/5.2). The board splits 7/6 the same way (make_font/make_qfont).
+    gives chrome (tabs/title/buttons) more breathing room. The board splits
+    7/6 the same way (make_font/make_qfont).
     """
     return BitmapFont(scale=size, advance=advance)
 
@@ -227,8 +224,8 @@ def _centered(surface, font, text, rect, color):
 def dither(surface, rect, color, cell=2, bg=BLACK):
     """Fill ``rect`` with a 2px checkerboard of ``color`` on ``bg``.
 
-    The Snake-Byte border fill (DESIGN.md sec. 4.2): side panels, the
-    current-state band, selection bands. Graphic only -- never under text.
+    The Snake-Byte border fill: side panels, the current-state band, selection
+    bands. Graphic only -- never under text.
     """
     x0, y0, w, h = pygame.Rect(rect)
     surface.fill(bg, (x0, y0, w, h))
@@ -238,11 +235,11 @@ def dither(surface, rect, color, cell=2, bg=BLACK):
 
 
 def title_bar(surface, ui, text):
-    """A thin gold marquee rail + the app name in gold on black (DESIGN 5.3).
+    """A thin gold marquee rail + the app name in gold on black.
 
-    Thinned 2026-06-24: a 4px ``CABINET_GOLD`` rail (not a 30px solid block),
-    the name below it in gold on black -- an arcade marquee, not window chrome
-    -- then the 2px ``DITHER_BLUE`` divider before the tab row.
+    A 4px ``CABINET_GOLD`` rail (not a solid block), the name below it in gold
+    on black -- an arcade marquee, not window chrome -- then the 2px
+    ``DITHER_BLUE`` divider before the tab row.
     """
     surface.fill(CABINET_GOLD, (0, 0, WIDTH, 4))
     label(surface, ui, (16, 9), text.upper(), CABINET_GOLD, font=ui.chrome)
@@ -253,10 +250,10 @@ _SCANLINES = None
 
 
 def scanline_overlay(surface):
-    """Blit a static 1px-every-3px dark CRT overlay (DESIGN.md sec. 7).
+    """Blit a static 1px-every-3px dark CRT overlay.
 
     Off by default (a Settings toggle); static, never animated -- the homage,
-    not eye strain (PRODUCT.md anti-ref). Cached: built once, blitted cheaply.
+    not eye strain. Cached: built once, blitted cheaply.
     """
     global _SCANLINES
     if _SCANLINES is None:
@@ -270,13 +267,13 @@ _VIGNETTE = None
 
 
 def vignette(surface, strength=90, n=48):
-    """Gentle CRT corner-darkening for the cockpit (DESIGN.md sec. 7).
+    """Gentle CRT corner-darkening for the cockpit.
 
-    The *calm* half of the two-cabinet CRT decision (2026-06-24): the dense
-    data screens keep razor-sharp text (no bloom/scanlines) -- but a soft
-    static vignette gives the glass its curve. It only shades the outer margins
-    (data lives inside MARGIN), so it costs no legibility and needs no toggle.
-    Cached: a small radial gradient smooth-scaled to the canvas, blitted once.
+    The dense data screens keep razor-sharp text (no bloom/scanlines), but a
+    soft static vignette gives the glass its curve. It only shades the outer
+    margins (data lives inside MARGIN), so it costs no legibility and needs no
+    toggle. Cached: a small radial gradient smooth-scaled to the canvas,
+    blitted once.
     """
     global _VIGNETTE
     if _VIGNETTE is None:
@@ -295,10 +292,9 @@ def vignette(surface, strength=90, n=48):
 def side_rails(surface):
     """Thin dithered-blue cabinet rails down the content-band side gutters.
 
-    The Snake-Byte side panels (DESIGN.md sec. 4.1) at *tool* density: 8px
-    dither rails in the existing side margins -- content draws from MARGIN in,
-    so they frame the working area without touching a widget. The cabinet read
-    the cockpit was missing; graphic only, never under text.
+    The Snake-Byte side panels at *tool* density: 8px dither rails in the
+    existing side margins -- content draws from MARGIN in, so they frame the
+    working area without touching a widget. Graphic only, never under text.
     """
     top = TITLE_H + 2 + TAB_H
     height = CONTENT_BOTTOM - top
@@ -478,8 +474,8 @@ def tabs(surface, ui, rect, labels, active):
 
     The active tab wears the blue selection dither + a gold underline -- the
     same graphic language as the selected Q-table row and a hovered button;
-    gold stays the active marker (DESIGN 5.2/5.3). Hovering another tab shows a
-    faint band so the row reads as selectable, not a static menu line.
+    gold stays the active marker. Hovering another tab shows a faint band so
+    the row reads as selectable, not a static menu line.
     """
     rect = pygame.Rect(rect)
     width = rect.width // max(1, len(labels))
@@ -502,9 +498,9 @@ def tabs(surface, ui, rect, labels, active):
 def panel(surface, rect):
     """A flat panel: black fill + 1px hairline, no bevel (passive region).
 
-    De-framed 2026-06-24 (Snake Byte fidelity): passive backgrounds and chart
-    frames read as quiet hairline boxes on black, not raised purple-black menu
-    cards. Interactive controls keep their bevels; these do not (DESIGN 5.2).
+    Passive backgrounds and chart frames read as quiet hairline boxes on
+    black, not raised menu cards. Interactive controls keep their bevels;
+    these do not.
     """
     rect = pygame.Rect(rect)
     pygame.draw.rect(surface, BG, rect)

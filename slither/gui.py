@@ -1,19 +1,19 @@
-"""GUI rendering. (Phase 1 increment onwards; subject compliance in Phase 7)
+"""GUI rendering.
 
 The product's only module that imports pygame; ``-visual off`` and the test
 suite must never load it. This module is a *pure renderer*: given a board it
 draws it. It owns no game logic, no input handling and no stdout -- the
-runner (Phase 5) and the Phase-1 human harness (``tests/play.py``) drive it.
+runner and the human harness (``tests/play.py``) drive it.
 """
 import pygame
 
-# Snake-Byte cabinet palette (DESIGN.md sec. 2), duplicated here by hand: the
-# -42 firewall keeps this module from sharing a theme import with the hub, so
-# the ~12 constants are mirrored and kept in sync against DESIGN.md sec. 2.
+# Snake-Byte cabinet palette, duplicated here by hand: the -42 firewall keeps
+# this module from sharing a theme import with the hub, so these constants are
+# mirrored rather than imported.
 BLACK = (0, 0, 0)
 CABINET_GOLD = (173, 139, 58)
 DITHER_BLUE = (92, 92, 200)
-SNAKE_LIME = (140, 165, 45)              # retuned 2026-06-24: less fluorescent
+SNAKE_LIME = (140, 165, 45)              # less fluorescent than the original
 SNAKE_HEAD_LIME = (200, 224, 110)
 APPLE_GREEN = (80, 175, 55)              # dimmer than the original bright dot
 APPLE_RED = (208, 72, 140)
@@ -28,8 +28,8 @@ SNAKE_BODY = SNAKE_LIME
 SNAKE_HEAD = SNAKE_HEAD_LIME            # marked by lightness, still lime
 TEXT = SILVER
 
-FRAME_PX = 16                           # side dither-rail width (DESIGN 4.1)
-BAR_PX = 6                              # thin gold top/bottom bar (Snake Byte)
+FRAME_PX = 16                           # side dither-rail width
+BAR_PX = 6                              # thin gold top/bottom bar
 OVERSCAN = 28                           # black TV overscan around the cabinet
 OX = OVERSCAN + FRAME_PX        # field origin x (inside left rail)
 OY = OVERSCAN + BAR_PX          # field origin y (below top bar)
@@ -38,7 +38,7 @@ BAR_H = 96                      # status area: a 2-column readout, <=4 rows
 # Q-table view (second tab): current-state band, value tints, greedy mark.
 # Q-value tints -- calm/dimmed, NOT the bright apple colors: a Q's sign is
 # data, so it reads as a quiet tint beside the (primary) signed number, not a
-# signal competing for attention (calm-tints decision 2026-06-24, DESIGN 5.2).
+# signal competing for attention.
 POS = (110, 170, 90)
 NEG = (190, 110, 150)
 ZERO = DIM
@@ -58,15 +58,14 @@ def create_window(size, cell_px):
     pygame.display.set_caption("Learn2Slither")
     board_px = size * cell_px
     # Board-only by default; pressing `Q` grows the window for the Q-table
-    # panel (gate VC1 = dynamic resize). The floor keeps the status readout
-    # legible on tiny boards.
+    # panel. The floor keeps the status readout legible on tiny boards.
     width = max(board_px + 2 * OX, _STATUS_MIN_W)
     height = OY + board_px + BAR_PX + BAR_H + OVERSCAN
     return pygame.display.set_mode((width, height))
 
 
 def _dither(screen, rect, color, cell=2, bg=BLACK):
-    """Fill ``rect`` with a 2px checkerboard of ``color`` (DESIGN.md 4.2)."""
+    """Fill ``rect`` with a 2px checkerboard of ``color``."""
     x0, y0, w, h = rect
     screen.fill(bg, (x0, y0, w, h))
     for yy in range(0, h, cell):
@@ -75,12 +74,12 @@ def _dither(screen, rect, color, cell=2, bg=BLACK):
 
 
 # --- 8x8 bitmap font: the Atari 8-bit OS ROM character set ($E000), thinned -
-# The font Snake Byte itself used; its ROM strokes are 2px (bold), so they are
-# thinned to 1px here to match the original's hairline weight (snake_byte.png).
-# Printable ASCII 0x20..0x7E, pre-mapped from Atari internal/screen-code order
-# into ASCII, bit-reversed (LSB = leftmost). 8x8 bitmap data is uncopyrightable
-# (data, not outlines); via kenjennings/Atari-Font-To-Code. Duplicated verbatim
-# in snake_den/widgets.py (the -42 firewall bars a shared import) -- static.
+# The font Snake Byte itself used; its ROM strokes are 2px (bold), thinned to
+# 1px here to match the original's hairline weight. Printable ASCII 0x20..0x7E,
+# pre-mapped from Atari internal/screen-code order into ASCII, bit-reversed
+# (LSB = leftmost). 8x8 bitmap data is uncopyrightable (data, not outlines);
+# via kenjennings/Atari-Font-To-Code. Duplicated verbatim in
+# snake_den/widgets.py (the -42 firewall bars a shared import).
 _FONT_ATARI = (
     "00000000000000000008080808000800002222220000000000227f22227f2200083c021c"
     "201e080000221208042222001824180c72224c0000080808000000000030180808183000"
@@ -209,12 +208,12 @@ def _draw_snake(screen, body, cell_px):
 
 
 def _draw_status(screen, font, fields, x0, y0):
-    """Lay out (label, value) pairs as a 2-column readout (Snake Byte).
+    """Lay out (label, value) pairs as a 2-column readout.
 
-    The original's quiet aligned readout, not one bold HUD line: two balanced
-    columns filled top-to-bottom, aligned by the monospace font's advance
-    (``font.cw``); all SILVER (sec. 7). The row count grows with the field
-    count -- watch adds STATE + ACTION -- so the readout stays two columns.
+    A quiet aligned readout, not one bold HUD line: two balanced columns
+    filled top-to-bottom, aligned by the monospace font's advance
+    (``font.cw``); all SILVER. The row count grows with the field count --
+    watch adds STATE + ACTION -- so the readout stays two columns.
     """
     cw = font.cw
     row_h = font.get_height() + 6
@@ -232,9 +231,9 @@ def render(screen, env, font, status, cell_px):
     board_px = size * cell_px
     screen.fill(BG)                          # black; overscan is just black
 
-    # Cabinet inside the black TV overscan (DESIGN 4.1/5.1, 2026-06-24): thin
-    # gold top/bottom bars; side rails dithered-blue on top, solid gold below
-    # (snake_byte.png). The field never touches the window edge.
+    # Cabinet inside the black TV overscan: thin gold top/bottom bars; side
+    # rails dithered-blue on top, solid gold below. The field never touches
+    # the window edge.
     bottom = OY + board_px
     rx = OX + board_px
     cab_w = 2 * FRAME_PX + board_px
@@ -257,8 +256,8 @@ def render(screen, env, font, status, cell_px):
 
     _draw_snake(screen, list(env.snake), cell_px)
 
-    # Status below the bottom bar: a 2x3 readout when given (label, value)
-    # fields (DESIGN 5.1), or a single SILVER line for a plain string.
+    # Status below the bottom bar: a 2-column readout when given (label,
+    # value) fields, or a single SILVER line for a plain string.
     sy = bottom + BAR_PX + 12
     if isinstance(status, str):
         screen.blit(font.render(status.upper(), False, TEXT), (OX, sy))
@@ -326,15 +325,13 @@ def render_qtable(screen, font, rows, current_state):
         screen.blit(font.render(str(sum(nvals)), False, ZERO), (QCOLS_X[5], y))
 
 
-# --- Analog-CRT post-process: the slither hero "full-TV" pass ----------------
-# Decision (2026-06-24, /impeccable): the game board deliberately steps past
-# PRODUCT.md anti-ref #4 *on this surface only*. It is sparse (snake + apples +
-# one status line), so it can carry the full Atari-on-a-CRT signal the crisp
-# nearest-neighbour render was missing -- the glow costs no data legibility.
-# Pipeline, in render order: horizontal smear (composite bandwidth) -> chroma
-# fringe (channel offset) -> bloom (phosphor glow, additive) -> scanlines ->
-# vignette. Pure pygame-ce (smoothscale + BLEND_RGB_*), no numpy; the cockpit
-# stays sharp (DESIGN.md sec. 7). Overlays cached; defeatable with `C`.
+# --- Analog-CRT post-process ------------------------------------------------
+# The game board can carry a full Atari-on-a-CRT signal: it is sparse (snake +
+# apples + one status line), so the glow costs no data legibility. Pipeline,
+# in render order: horizontal smear (composite bandwidth) -> chroma fringe
+# (channel offset) -> bloom (phosphor glow, additive) -> scanlines -> vignette.
+# Pure pygame-ce (smoothscale + BLEND_RGB_*), no numpy. Overlays are cached;
+# `C` toggles the pass off.
 _SCANLINES_CRT = None
 _VIGNETTE_CRT = None
 
@@ -408,7 +405,7 @@ def _vignette(surf, strength=110, n=48):
 
 
 def crt_process(surf):
-    """Run the full hero CRT pass in place (DESIGN.md sec. 7)."""
+    """Run the full CRT pass in place."""
     _smear(surf)
     _chroma(surf)
     _bloom(surf)
@@ -416,17 +413,13 @@ def crt_process(surf):
     _vignette(surf)
 
 
-# --- Boot marquee + phosphor persistence: the "overdrive" hero moment --------
-# Decision (2026-06-25, /impeccable overdrive): the -visual window opens like
-# an arcade cabinet powering on -- a CRT warm-up that snaps a SNAKE BYTE
-# marquee open -- then the live board carries long-persistence phosphor: the
-# snake leaves a decaying comet-glow trail (the genuine tube look the static
-# bloom can't make). Both live here, in the hero/firewall module; both are
-# defeatable (any key skips the boot; `T` toggles the trail) -- the pygame
-# analog of prefers-reduced-motion, with the static marquee as the calm
-# fallback. On-brand: PRODUCT.md anti-ref #4 carves the board out as the
-# deliberate full-CRT surface, so the arcade boot belongs to it, not the hub.
-PHOSPHOR_DECAY = 0.80          # per-frame trail decay (speed-adaptive)
+# --- Boot marquee + phosphor persistence ------------------------------------
+# The -visual window opens like an arcade cabinet powering on: a CRT warm-up
+# that snaps a SNAKE BYTE marquee open, then the live board carries
+# long-persistence phosphor -- the snake leaves a decaying comet-glow trail.
+# Both are defeatable (any key skips the boot; `T` toggles the trail), the
+# analog of prefers-reduced-motion, with the static marquee as the fallback.
+PHOSPHOR_DECAY = 0.80          # per-frame trail decay
 
 
 def _ease_out(t):
@@ -494,7 +487,7 @@ def draw_marquee(screen, title_font, font, *, open_frac=1.0, blink_on=True,
 
 
 class Presenter:
-    """The interactive ``-visual on`` window (Phase 7).
+    """The interactive ``-visual on`` window.
 
     The presenter is the *whole pygame boundary* for the product path: it owns
     the window, the event pump and the speed/pause/step/overlay state. The
@@ -506,18 +499,18 @@ class Presenter:
     Rendering at ~60 FPS is decoupled from the move cadence: each frame draws
     and pumps events, and a move is released only when the speed-ladder
     interval elapses (continuous) or SPACE is pressed (paused / step-by-step).
-    So the window stays responsive and the close button is instant at any speed
-    -- the grade-0 "no unexpected hang/crash" guard.
+    So the window stays responsive and the close button is instant at any
+    speed -- it never hangs or crashes.
 
     On construction it plays a one-time arcade power-on marquee (``_boot``);
     any key or ~2.4s drops into the game.
 
-    Keys (GATE V1): ``-``/``+`` and ``1``-``5`` set speed; ``P`` pauses;
-    ``SPACE`` steps one move when paused or step-by-step; ``TAB`` toggles the
-    debug overlay (the chosen-move arrow); ``C`` toggles the CRT pass; ``T``
-    toggles the phosphor trail (on by default); ``Q`` toggles the live Q-table
-    panel (the window grows to fit it); ``Esc`` or the window close button ends
-    the run cleanly.
+    Keys: ``-``/``+`` and ``1``-``5`` set speed; ``P`` pauses; ``SPACE`` steps
+    one move when paused or step-by-step; ``TAB`` toggles the debug overlay
+    (the chosen-move arrow); ``C`` toggles the CRT pass; ``T`` toggles the
+    phosphor trail (on by default); ``Q`` toggles the live Q-table panel (the
+    window grows to fit it); ``Esc`` or the window close button ends the run
+    cleanly.
     """
 
     SPEEDS = (2, 4, 8, 15, 30)        # moves per second; a human-readable 2/s
@@ -647,7 +640,7 @@ class Presenter:
         return self.SPEEDS[self.speed_index]
 
     def _resize(self):
-        """Grow/shrink the window for the Q-table panel (gate VC1 = dynamic).
+        """Grow/shrink the window for the Q-table panel.
 
         The board-only window grows by ``QPANEL_W`` when the table is shown and
         shrinks back when hidden. ``set_mode`` returns the new surface; the CRT
@@ -670,7 +663,7 @@ class Presenter:
         if self.overlay and action_delta is not None:
             draw_action(self.screen, env, action_delta, self.cell_px)
         if self.crt:
-            crt_process(self.screen)        # the board is the CRT hero
+            crt_process(self.screen)        # the board is the CRT surface
         if self.show_qtable:                # the panel stays crisp (post-CRT)
             self._draw_qpanel()
         pygame.display.flip()

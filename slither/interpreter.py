@@ -1,11 +1,11 @@
 """Interpreter: vision -> canonical state + frame, and outcome -> reward.
 
-Phase 3. A pure function of the vision (the ``{Direction: ray}`` dict from
+A pure function of the vision (the ``{Direction: ray}`` dict from
 ``vision.py``) and the ``StepOutcome`` -- it never reads the board, so the
 -42 firewall is structural: everything downstream (the agent) can only ever
 receive the ``(canonical_state, reward)`` this module emits.
 
-State design (docs/state-design.md): each ray is reduced to one nearest-object
+State design: each ray is reduced to one nearest-object
 symbol; the body anchors a relative frame that removes the board's 4 rotations
 and a mirror flag removes its 2 reflections. The canonical key is the
 lexicographically smallest 3-symbol (Forward, Left, Right) string over all
@@ -85,12 +85,12 @@ class Scheme:
     symbol, so the alphabet size k -- and therefore the state count
     k**2*(k+1)/2 -- is a pure function of this object. ``D`` (danger at 1) and
     ``N`` (clear) are always present. Recorded in the model file so a model is
-    always replayed with the scheme it trained on (model_io); built from the
-    config's ``[state]`` section (config.py).
+    always replayed with the scheme it trained on; built from the config's
+    ``[state]`` section.
     """
 
     warn: bool = True        # d: obstacle at distance 2
-    caution: bool = False    # c: obstacle at distance 3 (new distinction)
+    caution: bool = False    # c: obstacle at distance 3
     green_far: bool = True   # split green into close G / far g
     red_far: bool = True     # split red into close R / far r
     body_far: bool = False   # b: a far obstacle that is *body*, not wall
@@ -148,7 +148,7 @@ def legend(scheme=DEFAULT_SCHEME):
 
 
 def classify(ray, scheme=DEFAULT_SCHEME):
-    """Reduce one ray to its nearest-object symbol (state-design.md sec. 3).
+    """Reduce one ray to its nearest-object symbol.
 
     Scans outward from distance 1 (``ray[0]``) to the first non-empty cell and
     buckets it under ``scheme``: an obstacle (wall/body) is ``D`` at distance
@@ -210,7 +210,7 @@ def state(rays, scheme=DEFAULT_SCHEME):
 
 @dataclass(frozen=True)
 class Rewards:
-    """The reward values, supplied by the runner (from config in Phase 5)."""
+    """The reward values, supplied by the runner."""
 
     green: float
     red: float
@@ -223,7 +223,7 @@ def reward(outcome, rewards):
     """Price one ``StepOutcome`` into a scalar.
 
     Terminal events dominate, which makes the cases mutually exclusive: a win
-    is the board-full E2 victory (it also set ``ate_green``), death covers all
+    is the board-full victory (it also set ``ate_green``), death covers all
     three game-overs, and otherwise exactly one of green / red / empty
     happened. Values come from config; the rule (structure) is fixed here.
     """

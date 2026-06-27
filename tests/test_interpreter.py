@@ -1,4 +1,4 @@
-"""Phase 3 tests: the bug-magnet (state-design.md sec. 7).
+"""Tests for the interpreter -- the project's bug-magnet.
 
 Covers ray classification, the 196-state key space, the frame round-trip
 (bijection + anchors), mirror equivariance, and the reward cascade.

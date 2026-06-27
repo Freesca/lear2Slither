@@ -1,4 +1,4 @@
-"""Phase 6 tests: the evaluation stats engine.
+"""Tests for the evaluation stats engine.
 
 Covered: summarize math, outcome classification, the golden -stats report
 text, and compare()'s determinism + headless quiet + baseline-is-random.

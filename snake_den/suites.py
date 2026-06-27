@@ -1,11 +1,10 @@
-"""Eval suites: named, reusable evaluation profiles. (rework)
+"""Eval suites: named, reusable evaluation profiles.
 
 A *suite* is one set of evaluation parameters -- ``games``, ``seed``,
 ``board``, ``target`` and ``step_cap`` -- under which models are scored. The
-built-in
-``STANDARD`` suite is a constant comparison yardstick (every model's headline
-badge is its score here); custom suites are saved from the Eval page and stored
-in the hub data file's ``suites`` table.
+built-in ``STANDARD`` suite is a constant comparison yardstick (every model's
+headline badge is its score here); custom suites are saved from the Eval page
+and stored in the hub data file's ``suites`` table.
 
 Scores stay keyed by the registry's ``profile_key`` (games/seed/board/target),
 so a suite is just a *named* profile: two suites with the same four numbers map

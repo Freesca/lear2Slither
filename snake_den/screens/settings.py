@@ -1,10 +1,10 @@
-"""Settings tab: paths, pool size, theme, motion toggles. (rework)
+"""Settings tab: paths, pool size, theme, motion toggles.
 
 Edits the persisted hub settings (snake_den/settings.py). The eval profile no
 longer lives here -- it moved to the Eval page as named suites -- so this is
 just the worker-pool size, where models live, the theme name, and the two
-motion toggles (reduced motion / scanlines, DESIGN sec. 7). Apply validates,
-writes through the Settings accessor, updates the JobManager, and persists.
+motion toggles (reduced motion / scanlines). Apply validates, writes through
+the Settings accessor, updates the JobManager, and persists.
 """
 import os
 

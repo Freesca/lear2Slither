@@ -1,4 +1,4 @@
-"""Phase 5 tests: model save/load round-trip preserves Q exactly."""
+"""Tests: model save/load round-trip preserves Q exactly."""
 import random
 
 import pytest

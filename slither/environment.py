@@ -1,8 +1,7 @@
-"""Environment: board rules, spawns, step(), game-over. (Phase 1)
+"""Environment: board rules, spawns, step(), game-over.
 
 Knows nothing about vision, rewards, or Q-values. It is a pure, silent
-world simulator: it owns the board and the rules and does no I/O. See
-docs/environment-design.md for the design decisions behind this module.
+world simulator: it owns the board and the rules and does no I/O.
 """
 from collections import deque
 from dataclasses import dataclass
@@ -13,7 +12,7 @@ class Direction(Enum):
     """The four absolute moves.
 
     The value is the ``(row, col)`` delta on the board, with row
-    increasing downward (environment-design.md §1).
+    increasing downward.
     """
 
     UP = (-1, 0)
@@ -28,8 +27,8 @@ class StepOutcome:
 
     Events only -- no vision, no reward, no board. ``death_cause`` is one
     of ``"wall"``, ``"self"``, ``"length"`` (None while alive). ``won``
-    flags the GATE E2 victory: a green apple was eaten but the board is
-    now full, so there is nowhere left to respawn.
+    flags victory: a green apple was eaten but the board is now full, so
+    there is nowhere left to respawn.
     """
 
     ate_green: bool = False
@@ -63,9 +62,9 @@ class Environment:
     def step(self, direction: Direction) -> StepOutcome:
         """Advance one tick in ``direction``; mutate the board in place.
 
-        Check order (environment-design.md §5): wall, then self-collision
-        honouring the tail-vacating rule (GATE E1), then the move itself
-        with growth / shrink and the length-0 and E2 terminal cases.
+        Check order: wall, then self-collision honouring the tail-vacating
+        rule, then the move itself with growth / shrink and the length-0
+        and full-board terminal cases.
         """
         dr, dc = direction.value
         hr, hc = self.snake[0]
@@ -78,7 +77,7 @@ class Environment:
         ate_red = new_head in self.red_apples
 
         # Self-collision. When the snake does not grow, the tail vacates
-        # this tick, so the cell it leaves is legal to enter (GATE E1).
+        # this tick, so the cell it leaves is legal to enter.
         body = set(self.snake)
         if not ate_green:
             body.discard(self.snake[-1])
@@ -97,7 +96,7 @@ class Environment:
 
     def _eat_green(self, head: tuple[int, int]) -> StepOutcome:
         # Grew: the tail stayed, so length += 1. Respawn the green apple;
-        # a full board (no free cell) is the GATE E2 victory.
+        # a full board (no free cell) is the victory.
         self.green_apples.discard(head)
         cell = self._random_free_cell()
         if cell is None:

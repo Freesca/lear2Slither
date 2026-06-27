@@ -1,12 +1,12 @@
-"""Evaluation suite: aggregate stats over runner results. (Phase 6)
+"""Evaluation suite: aggregate stats over runner results.
 
 Pure statistics over the ``SessionResult`` list the runner already returns
 (runner.py) -- this module reads boards, agents and pygame *not at all*. It is
 the single source of truth for "how good is this model", consumed both by the
-``-stats`` terminal report and (later) by the GUI stats screens: build the
-numbers once, render them twice.
+``-stats`` terminal report and by the GUI stats screens: build the numbers
+once, render them twice.
 
-Design rationale in docs/evaluation-design.md:
+Design rationale:
 
 - A frozen model is measured with learning OFF and epsilon = 0
   (``-dontlearn``), so every move is the policy's genuine argmax. The runner
@@ -129,8 +129,8 @@ def compare(config, model_paths, *, games, seed):
 
     Returns ``[(label, SuiteStats), ...]``, baseline first. Every suite shares
     one ``seed``, so each model faces the identical board sequence -- the
-    comparison is fair and fully reproducible (evaluation-design.md sec. 5).
-    The runner is driven quietly (no per-game lines) so only the final table
+    comparison is fair and fully reproducible. The runner is driven quietly
+    (no per-game lines) so only the final table
     reaches stdout.
     """
     rows = [("baseline (random)",

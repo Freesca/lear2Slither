@@ -1,4 +1,4 @@
-"""Chart geometry: pure data -> coordinate math (no pygame). (Phase B1)
+"""Chart geometry: pure data -> coordinate math (no pygame).
 
 The hub draws live training curves, Q-row bars and a results matrix. The
 *geometry* -- turning data values into pixel coordinates inside a plot rect --

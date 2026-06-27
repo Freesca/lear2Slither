@@ -1,19 +1,18 @@
-"""Structured progress output for the hub. (Phase 7, GATE H1)
+"""Structured progress output for the hub.
 
-When ``./snake`` runs with ``-progress`` it emits JSON-lines on stdout in place
-of the human Game-over/Save/Load text, so the hub (a separate program, see
-docs/hub-design.md) can build a live training curve and read final results
-without scraping human prose. One object per line:
+When ``./snake`` runs with ``-progress`` it emits JSON-lines on stdout in
+place of the human Game-over/Save/Load text, so the hub can build a live
+training curve and read final results without scraping prose. One object
+per line:
 
     {"type":"start",   "format_version":1, "mode":..., "total_sessions":N}
     {"type":"session", "i":k, "max_length":X, "duration":Y, ...}  # one/game
     {"type":"summary", ...}                                    # a SuiteStats
 
-The schema is versioned (``format_version``) and every line is emitted with
-sorted keys + compact separators, so the stream is byte-stable. This module
-imports nothing else from ``slither`` -- it only serializes dicts -- so it is
-a leaf with no import cycles: the runner emits ``start`` + ``session``, the CLI
-emits ``summary`` (it owns ``evaluate``).
+The schema is versioned and every line is emitted with sorted keys and
+compact separators, so the stream is byte-stable. This module imports
+nothing else from ``slither`` (it only serializes dicts), so the runner
+emits ``start`` + ``session`` and the CLI emits ``summary``.
 """
 import json
 

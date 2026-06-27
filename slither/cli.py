@@ -1,9 +1,9 @@
-"""Command-line interface: subject flags -> mode + config -> runner. (Phase 5)
+"""Command-line interface: subject flags -> mode + config -> runner.
 
-Parses the subject's single-dash flags (implementation-plan.md sec. 6), loads
-the configuration, builds the run options, and hands both to the runner. No
-game logic lives here. ``allow_abbrev=False`` so the several -s* flags
-(-sessions, -save, -step-by-step, -seed) never collide via prefix matching.
+Parses the subject's single-dash flags, loads the configuration, builds the
+run options, and hands both to the runner. No game logic lives here.
+``allow_abbrev=False`` so the several -s* flags (-sessions, -save,
+-step-by-step, -seed) never collide via prefix matching.
 """
 import argparse
 
@@ -27,7 +27,7 @@ def build_parser():
     parser.add_argument("-load", metavar="PATH",
                         help="import a model before the run")
     parser.add_argument("-visual", choices=("on", "off"), default="off",
-                        help="GUI window on/off (headless until Phase 7)")
+                        help="GUI window on/off")
     parser.add_argument("-dontlearn", action="store_true",
                         help="evaluation: no Q update and epsilon = 0")
     parser.add_argument("-step-by-step", dest="step_by_step",
@@ -50,7 +50,7 @@ def build_parser():
                              "learning-curve table, and exit")
     parser.add_argument("-progress", action="store_true",
                         help="emit JSON-lines progress instead of human text "
-                             "(for the hub; see docs/hub-design.md)")
+                             "(for the hub)")
     return parser
 
 

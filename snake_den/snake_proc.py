@@ -1,20 +1,20 @@
 """snake_proc: turn a JobSpec into a ./snake invocation, parse its progress.
 
-This is the hub's whole boundary to the shipped product (hub-design.md
-sec. 3.2). A JobSpec is turned into:
+This is the hub's whole boundary to the shipped product. A JobSpec is turned
+into:
 
   1. a temp TOML config -- the stdlib's ``tomllib`` is read-only and adding a
      writer (``tomli-w``) is a fresh-clone install risk on the defense box, so
-     the hub hand-writes it (gate H8); and
+     the hub hand-writes it; and
   2. an argv invoked as the Python *module* form, with unbuffered stdout so the
-     -progress stream arrives live (gate H9):
+     -progress stream arrives live:
      ``[sys.executable, "-u", "-m", "slither", ...]`` -- this runs identically
      on Windows dev and the Linux box, which the POSIX ``./snake`` does not.
 
 Nothing about the agent crosses this boundary: only config in, model JSON + the
 -progress JSON-lines stream out. This module imports ``slither.config`` solely
 for ``DEFAULTS`` (the config schema); it never imports the runner/agent/
-environment/gui (hub-design.md H4).
+environment/gui.
 """
 import json
 import sys
@@ -26,7 +26,7 @@ from slither.config import DEFAULTS
 
 # The -progress schema version this parser understands. A local mirror of
 # slither.progress.FORMAT_VERSION, kept here rather than imported so the hub's
-# import surface into the product stays exactly {config, model_io} (H4);
+# import surface into the product stays exactly {config, model_io};
 # test_hub_snake_proc pins the two equal so the duplication cannot drift.
 PROGRESS_FORMAT_VERSION = 1
 
@@ -41,8 +41,7 @@ class JobSpec:
     train jobs it comes from the New-Job editor; for eval/watch jobs it is
     built from an eval profile by :func:`eval_config`, and ``eval_profile``
     records that profile so a finished eval's score files under the right
-    profile key (hub-design.md H2). ``sessions``/``seed`` become CLI flags,
-    not config keys.
+    profile key. ``sessions``/``seed`` become CLI flags, not config keys.
     """
 
     type: str                          # "train" | "eval" | "watch"
@@ -54,10 +53,10 @@ class JobSpec:
     eval_profile: dict | None = None   # eval/watch: profile config came from
 
 
-# --- TOML emitter (gate H8) -------------------------------------------------
+# --- TOML emitter -----------------------------------------------------------
 
 def emit_toml(config):
-    """Serialize a two-level config dict to TOML text (the H8 emitter).
+    """Serialize a two-level config dict to TOML text.
 
     The config is a flat table-of-tables of scalars, so the grammar needed is
     tiny: a ``[section]`` header per table, then ``key = value`` lines. Values
@@ -121,8 +120,8 @@ def write_temp_config(config):
 def eval_config(profile):
     """Build the config for an eval/watch job from an eval profile.
 
-    The profile (hub-design.md H2) fixes ``board`` + ``target`` so every model
-    is scored on one yardstick; rewards/learning are irrelevant under
+    The profile fixes ``board`` + ``target`` so every model is scored on one
+    yardstick; rewards/learning are irrelevant under
     ``-dontlearn`` so they stay at defaults. ``games``/``seed`` are CLI flags
     (not config keys), so they are not written here. Validating a model on a
     different board size -- the bonus's proof -- is just a profile with a
@@ -134,12 +133,12 @@ def eval_config(profile):
     return config
 
 
-# --- argv builder (gate H9) -------------------------------------------------
+# --- argv builder -----------------------------------------------------------
 
 def build_argv(spec, config_path):
     """The argv to spawn ``spec``, using ``config_path`` as the temp config.
 
-    Module form + unbuffered (H9): ``[sys.executable, "-u", "-m", "slither",
+    Module form + unbuffered: ``[sys.executable, "-u", "-m", "slither",
     ...]``. Per type:
 
       train: -config C -sessions N -seed S [-load base] -save out -progress
@@ -184,7 +183,7 @@ def parse_line(line):
     schema version on the opening ``start`` event (only that line carries
     ``format_version``). Raises ``ValueError`` on anything malformed -- the
     caller (the job's reader) wraps this so a bad line fails only its own job,
-    never the hub (hub-design.md sec. 3.4, the no-crash rule).
+    never the hub (the no-crash rule).
     """
     try:
         event = json.loads(line)

@@ -1,10 +1,10 @@
-"""Settings: the hub's remembered preferences. (Phase A3 / rework)
+"""Settings: the hub's remembered preferences.
 
-A typed, default-filled view over the data file's ``settings`` table
-(hub-design.md sec. 6): the worker-pool size, where models live, the UI theme,
-and the two motion toggles (DESIGN.md sec. 7). Reads fall back to defaults so a
-fresh data file (no settings yet) still yields values; writes go straight into
-the shared dict the app persists via ``persistence.save``.
+A typed, default-filled view over the data file's ``settings`` table: the
+worker-pool size, where models live, the UI theme, and the two motion toggles.
+Reads fall back to defaults so a fresh data file (no settings yet) still yields
+values; writes go straight into the shared dict the app persists via
+``persistence.save``.
 
 The eval profile no longer lives here: evaluation parameters moved onto the
 Eval page as named *suites* (suites.py), so Settings is paths + pool + theme

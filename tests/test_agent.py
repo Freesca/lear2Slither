@@ -1,10 +1,10 @@
-"""Phase 4 tests: the Bellman update math and the policy invariants.
+"""Tests for the Bellman update math and the policy invariants.
 
-The two highest-risk facts get hand-computed checks before any training
-(implementation-plan.md sec. 8): the non-terminal update (with bootstrap) and
-the terminal update (no bootstrap). Plus: random tie-breaking actually
-randomises, exploration can reach every column, eval mode never mutates Q,
-and epsilon is a pure function of the session count (resume behaviour).
+The two highest-risk facts get hand-computed checks before any training: the
+non-terminal update (with bootstrap) and the terminal update (no bootstrap).
+Plus: random tie-breaking actually randomises, exploration can reach every
+column, eval mode never mutates Q, and epsilon is a pure function of the
+session count (resume behaviour).
 """
 import copy
 import random
@@ -13,7 +13,7 @@ import pytest
 
 from slither.agent import Agent, Hyperparameters
 
-# alpha/gamma match the worked examples in the Phase 4 theory checkpoint.
+# alpha/gamma match the worked examples in the tests below.
 HP = Hyperparameters(alpha=0.1, gamma=0.9, epsilon_start=1.0,
                      epsilon_min=0.01, epsilon_decay=0.99)
 

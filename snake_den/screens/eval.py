@@ -1,4 +1,4 @@
-"""Eval tab: suites + multi-model batch evaluation. (rework)
+"""Eval tab: suites + multi-model batch evaluation.
 
 The eval half of the old New-Job screen, now suite-driven. The evaluation
 parameters (games / seed / board / target / step_cap) moved here from Settings

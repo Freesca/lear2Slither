@@ -1,4 +1,4 @@
-"""Phase-1/4 dev harness: drive the snake by hand AND watch the agent learn.
+"""Dev harness: drive the snake by hand AND watch the agent learn.
 
 A *dev tool*, not part of the product: it lives in ``tests/`` but is **not** a
 pytest test (its name is not ``test_*``, so pytest never collects it). Launch
@@ -37,9 +37,8 @@ KEYMAP = {
     pygame.K_d: Direction.RIGHT,
 }
 
-# Provisional agent settings -- mirror configs/default.toml until the config
-# loader (Phase 5) exists. These values are NOT decided (gates T1-T4); they are
-# fine for a dev harness whose point is to watch the mechanism, not to tune it.
+# Provisional agent settings, mirroring configs/default.toml. They are fine
+# for a dev harness whose point is to watch the mechanism, not to tune it.
 REWARDS = interpreter.Rewards(
     green=20.0, red=-10.0, step=-1.0, death=-100.0, win=100.0,
 )
@@ -198,7 +197,7 @@ def run(size=10, cell_px=40, seed=None):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Phase 1/4 dev harness")
+    parser = argparse.ArgumentParser(description="snake dev harness")
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--size", type=int, default=10)
     parser.add_argument("--cell", type=int, default=40)

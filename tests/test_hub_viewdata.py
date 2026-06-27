@@ -1,4 +1,4 @@
-"""Milestone-B tests: Q-table view data (snake_den/viewdata.py).
+"""Tests for Q-table view data (snake_den/viewdata.py).
 
 Q-table row assembly (sorted, argmax/greedy highlight) and the policy
 fingerprint (greedy-Q-value sign per state) the Models list renders. Pure --

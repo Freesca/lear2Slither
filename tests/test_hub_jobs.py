@@ -1,4 +1,4 @@
-"""Milestone-A tests: the JobManager pool + lifecycle (snake_den/jobs.py).
+"""Tests for the JobManager pool + lifecycle (snake_den/jobs.py).
 
 The subprocess engine is the hub's highest-risk surface (the no-orphan /
 no-crash rule), so it is tested headlessly with fast *fake* children -- a tiny

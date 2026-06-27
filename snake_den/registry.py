@@ -1,18 +1,17 @@
-"""Model registry: metadata + per-profile eval scores. (Phase A3)
+"""Model registry: metadata + per-profile eval scores.
 
-The hub's memory of the models it has trained and evaluated (hub-design.md
-sec. 6). Each entry is keyed by the model's file path and holds how many
-sessions it was trained for, the config it was trained with, and a map of eval
-scores. Scores are filed under an **eval-profile key**
-(games/seed/board/target) so the registry never silently compares numbers
-measured on different yardsticks (gate H2) -- a model evaluated at target 10
-and at target 15 keeps both scores.
+The hub's memory of the models it has trained and evaluated. Each entry is
+keyed by the model's file path and holds how many sessions it was trained for,
+the config it was trained with, and a map of eval scores. Scores are filed
+under an **eval-profile key** (games/seed/board/target) so the registry never
+silently compares numbers measured on different yardsticks -- a model evaluated
+at target 10 and at target 15 keeps both scores.
 
 Metadata comes from the model file itself: ``sessions`` via ``model_io.load``
 (the product's own validated parser, so the hub does not re-implement it), and
 ``config`` from the raw model JSON -- ``model_io.load`` deliberately does not
 surface config. ``model_io`` and ``config.DEFAULTS`` are the only product
-modules the hub imports (H4); execution always goes through spawning ./snake.
+modules the hub imports; execution always goes through spawning ./snake.
 """
 import json
 import os
@@ -24,7 +23,7 @@ from snake_den import viewdata
 
 
 def profile_key(profile):
-    """A stable string key for an eval profile (H2 comparability)."""
+    """A stable string key for an eval profile."""
     return (f"games={profile['games']};seed={profile['seed']};"
             f"board={profile['board']};target={profile['target']}")
 
@@ -140,7 +139,7 @@ class Registry:
 
 
 def history_record(job):
-    """A learning-honest archive record for a terminal train/eval job (D3).
+    """A learning-honest archive record for a terminal train/eval job.
 
     Train records carry a curve-honest outcome (sessions + best/recent length)
     and never success%/target -- that is an eval concept (epsilon > 0 during

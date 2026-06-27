@@ -1,14 +1,13 @@
-"""Persistence: the hub's data file (atomic load/save). (Phase A3)
+"""Persistence: the hub's data file (atomic load/save).
 
 One JSON file the hub owns -- ``snake_den/hub_data.json`` -- holding its
-cross-restart state (hub-design.md sec. 6): the model registry, a job history
-log, the user's settings, and the saved eval suites. This module is the
-low-level store: it knows the top-level keys exist and nothing about what is
-inside them (registry.py / settings.py / suites.py own those). Two rules it
-enforces:
+cross-restart state: the model registry, a job history log, the user's
+settings, and the saved eval suites. This module is the low-level store: it
+knows the top-level keys exist and nothing about what is inside them
+(registry.py / settings.py / suites.py own those). Two rules it enforces:
 
-- **Fresh-clone safe (H10):** a missing *or* corrupt file is not an error --
-  the hub starts from an empty skeleton rather than crashing (no-crash rule).
+- **Fresh-clone safe:** a missing *or* corrupt file is not an error -- the hub
+  starts from an empty skeleton rather than crashing (no-crash rule).
 - **Atomic writes:** the data is written to a temp file in the same directory
   and then ``os.replace``-d into place. ``os.replace`` is atomic on POSIX and
   Windows, so a crash mid-write leaves the previous file intact -- never a
@@ -23,14 +22,14 @@ _SKELETON = {"models": {}, "history": [], "settings": {}, "suites": {}}
 
 
 def empty():
-    """A fresh, empty hub-data dict (the fresh-clone state, H10)."""
+    """A fresh, empty hub-data dict (the fresh-clone state)."""
     return deepcopy(_SKELETON)
 
 
 def load(path):
     """Load the hub data file, or an empty skeleton if missing/corrupt.
 
-    Only the three known top-level keys are kept; anything else in the file is
+    Only the four known top-level keys are kept; anything else in the file is
     dropped, and any missing key is filled from the skeleton, so callers always
     get a well-shaped dict.
     """

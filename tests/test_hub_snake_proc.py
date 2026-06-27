@@ -1,8 +1,8 @@
-"""Milestone-A tests: the hub's boundary to ./snake (snake_den/snake_proc.py).
+"""Tests for the hub's boundary to ./snake (snake_den/snake_proc.py).
 
 Covers the pure functions that must be exactly right before any subprocess is
-spawned: the H8 TOML emitter (round-trips through tomllib AND is accepted by
-slither.config.load, with int/float types preserved), the H9 argv builder (one
+spawned: the TOML emitter (round-trips through tomllib AND is accepted by
+slither.config.load, with int/float types preserved), the argv builder (one
 golden per job type), the eval-profile mapping, and the -progress parser (right
 events out, malformed line raises so the caller can fail just that job).
 """
@@ -21,7 +21,7 @@ from snake_den import snake_proc
 from snake_den.snake_proc import JobSpec
 
 
-# --- TOML emitter (H8) ------------------------------------------------------
+# --- TOML emitter -----------------------------------------------------------
 
 def test_emit_toml_roundtrips_through_tomllib():
     text = snake_proc.emit_toml(config.DEFAULTS)
@@ -83,7 +83,7 @@ def test_eval_config_does_not_mutate_defaults():
     assert config.DEFAULTS["board"]["size"] == before
 
 
-# --- argv builder (H9) ------------------------------------------------------
+# --- argv builder -----------------------------------------------------------
 
 _PREFIX = [sys.executable, "-u", "-m", "slither", "-config", "C"]
 
@@ -175,5 +175,5 @@ def test_parse_line_rejects_bad_format_version():
 
 
 def test_local_format_version_matches_product():
-    # Pin the H4 mirror against drift, like test_config pins DEFAULTS.
+    # Pin the mirror against drift, like test_config pins DEFAULTS.
     assert snake_proc.PROGRESS_FORMAT_VERSION == progress.FORMAT_VERSION

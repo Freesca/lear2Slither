@@ -1,10 +1,10 @@
-"""Mirror of slither's dynamic state alphabet (the -42 firewall, H4).
+"""Mirror of slither's dynamic state alphabet (the -42 firewall).
 
 The hub lets the user pick the state distinctions for a training run and must
 show the resulting alphabet, state count and legend -- but it may not import
 slither's interpreter (only ``config.DEFAULTS`` + ``model_io`` cross the
-boundary, hub-design.md H4). So the tiny alphabet/legend math is duplicated
-here, the same way the palette is duplicated in DESIGN.md and
+boundary). So the tiny alphabet/legend math is duplicated here, the same way
+the palette is duplicated in each render module and
 ``snake_proc.PROGRESS_FORMAT_VERSION`` mirrors the product's constant.
 ``test_hub_scheme`` pins this equal to ``slither.interpreter`` (a test may
 import the product freely) so the copy cannot drift.

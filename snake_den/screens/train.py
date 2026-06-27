@@ -189,7 +189,7 @@ class TrainScreen(Screen):
         base_model = None if choice == "(none)" else choice
         spec = JobSpec("train", cfg, sessions=sessions, seed=seed,
                        base_model=base_model, save_path=save_path)
-        self.app.jobs.submit(spec)       # archived to history on finish (D3)
+        self.app.jobs.submit(spec)       # archived to history on finish
         self.error = ""
         self.app.open_models()
 

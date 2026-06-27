@@ -1,4 +1,4 @@
-"""The persistent job-pool footer, visible on every tab. (rework)
+"""The persistent job-pool footer, visible on every tab.
 
 Absorbs the old Dashboard's role: a bottom strip showing the pool status and a
 compact chip per recent job -- live curve, status colour, a Stop button while

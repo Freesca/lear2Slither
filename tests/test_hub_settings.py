@@ -1,4 +1,4 @@
-"""Milestone-A tests: hub settings (snake_den/settings.py).
+"""Tests for hub settings (snake_den/settings.py).
 
 Defaults fill in for a fresh data file, writes land in the shared table, and
 the whole thing survives a persistence round-trip. The eval profile no longer

@@ -1,10 +1,10 @@
-"""Model persistence: save / load the model JSON. (Phase 5)
+"""Model persistence: save / load the model JSON.
 
 Keeps the Agent file-format-ignorant -- the agent never imports json. The
-format is implementation-plan.md sec. 6: one human-readable JSON capturing the
-sparse Q-table, the visit counts, the session count (so training can resume)
-and the config used (traceability only; the active run uses the *current*
-config, never the stored one).
+format is one human-readable JSON capturing the sparse Q-table, the visit
+counts, the session count (so training can resume) and the config used
+(traceability only; the active run uses the *current* config, never the
+stored one).
 """
 import json
 from dataclasses import dataclass, field
@@ -73,10 +73,9 @@ def load(path):
 
     Coerces the JSON numbers to the agent's expected types and checks the
     format version and required keys, raising ``ValueError`` on a malformed
-    file (Phase 9 wraps this into a clean top-level message). A v1 file (no
-    ``state`` block) loads as the default 7-letter scheme, and a v1/v2 file (no
-    ``curve``) loads with an empty curve, so the committed deliverable models
-    keep working without a retrain.
+    file. A v1 file (no ``state`` block) loads as the default 7-letter scheme,
+    and a v1/v2 file (no ``curve``) loads with an empty curve, so the committed
+    deliverable models keep working without a retrain.
     """
     with open(path, encoding="utf-8") as handle:
         data = json.load(handle)

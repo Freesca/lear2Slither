@@ -1,4 +1,4 @@
-"""The hub's pygame application: tabbed shell + the 60 FPS loop. (rework)
+"""The hub's pygame application: tabbed shell + the 60 FPS loop.
 
 Owns the window, the one ~60 FPS loop, and a flat **three-tab + settings**
 navigation (Models / Train / Eval / Settings) under a gold cabinet title bar,
@@ -6,7 +6,7 @@ with a persistent job-pool footer visible on every tab. Each frame it drains
 the JobManager (non-blocking), pumps pygame events into the UI context, draws
 the active tab's screen and the footer. Closing the window tears every child
 down cleanly (``JobManager.shutdown``) and persists the data file before
-quitting -- no orphan ``./snake`` process, no traceback (the grade-0 rule).
+quitting -- no orphan ``./snake`` process, no traceback (the no-crash rule).
 
 Like the product's gui.py this module imports pygame and is never imported by a
 test; the dummy SDL driver is used for a headless smoke (``run`` takes an
@@ -121,8 +121,8 @@ class App:
     def _update_viewport(self):
         """Fit the logical canvas into the window at an *integer* zoom.
 
-        Integer-only scaling (decided 2026-06-24) keeps every pixel square and
-        crisp: pick the largest whole multiple that fits, centre it, letterbox
+        Integer-only scaling keeps every pixel square and crisp: pick the
+        largest whole multiple that fits, centre it, letterbox
         the rest. The UI gets the same integer zoom so mouse hit-tests map
         window pixels back to logical pixels.
         """
@@ -180,9 +180,9 @@ class App:
         A finished **train** job's model is registered and its live curve is
         persisted (downsampled) so the detail page can show it after the job is
         gone. A finished **eval** job's summary is recorded as that model's
-        score under the profile it ran with (gate H2). Every terminal
-        train/eval job (finished *or* failed) is also archived to the
-        ``history`` store -- the Runs tab's source of truth (D3). Once each.
+        score under the profile it ran with. Every terminal train/eval job
+        (finished *or* failed) is also archived to the ``history`` store -- the
+        Runs tab's source of truth. Once each.
         """
         changed = False
         for job in self.jobs.jobs:
@@ -218,7 +218,7 @@ class App:
 
 
 def _profile_from_spec(spec):
-    """The eval-profile key parts implied by an eval job's spec (H2)."""
+    """The eval-profile key parts implied by an eval job's spec."""
     return {"games": spec.sessions, "seed": spec.seed,
             "board": spec.config["board"]["size"],
             "target": spec.config["goal"]["target_length"]}

@@ -1,8 +1,8 @@
-"""Milestone-A tests: the hub data file (snake_den/persistence.py).
+"""Tests for the hub data file (snake_den/persistence.py).
 
 The store must be fresh-clone safe (a missing or corrupt file yields an empty
-skeleton, never a crash -- H10/no-crash rule) and atomic (a failed write leaves
-the previous file intact and no .tmp litter, so a crash can't lose data).
+skeleton, never a crash) and atomic (a failed write leaves the previous file
+intact and no .tmp litter, so a crash can't lose data).
 """
 from pathlib import Path
 

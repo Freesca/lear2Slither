@@ -1,4 +1,4 @@
-"""Screen base, shared by the hub's tab screens. (rework)
+"""Screen base, shared by the hub's tab screens.
 
 A screen is driven by the App's 60 FPS loop: ``draw`` is called every frame and
 both renders and handles this frame's input (immediate mode), reaching the app

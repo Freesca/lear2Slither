@@ -1,4 +1,4 @@
-"""Vision: the snake's 4-direction perception and its cross print. (Phase 2)
+"""Vision: the snake's 4-direction perception and its cross print.
 
 This is the sole board-reading module on the product path. Every signal the
 agent ever receives is derived from the four ray strings produced here, so
@@ -40,7 +40,7 @@ def _ray(env, body, direction):
 
     Apples are checked before body so an apple is never mislabelled, and
     the loop stops only at the wall -- the full ray to the edge is the
-    raw material the Phase-3 state design reads (no truncation here).
+    raw material the state design reads (no truncation here).
     """
     dr, dc = direction.value
     r, c = env.snake[0]

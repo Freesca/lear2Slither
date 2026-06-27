@@ -1,9 +1,9 @@
-"""Milestone-A tests: the model registry (snake_den/registry.py).
+"""Tests for the model registry (snake_den/registry.py).
 
 Proves the two contracts that matter: the registry reads sessions + config off
-a *real* product-saved model file (sessions via model_io, config via raw JSON,
-per H4), and eval scores are isolated per eval-profile key so one profile never
-clobbers another's number (gate H2).
+a *real* product-saved model file (sessions via model_io, config via raw JSON),
+and eval scores are isolated per eval-profile key so one profile never clobbers
+another's number.
 """
 import json
 import os

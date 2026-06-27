@@ -1,7 +1,7 @@
-"""Runs tab: the persistent archive of completed train/eval runs. (rework)
+"""Runs tab: the persistent archive of completed train/eval runs.
 
 The footer is the live tail -- what is running, queued, or just finished; this
-tab is the home of the ``history`` store (D3): every terminal train/eval run,
+tab is the home of the ``history`` store: every terminal train/eval run,
 newest first, read from ``registry.history()``. A train run shows its
 learning-honest outcome (sessions + best/recent length, never success% -- that
 is an eval concept); an eval run shows its success summary; a failed
