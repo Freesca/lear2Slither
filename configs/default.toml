@@ -1,0 +1,45 @@
+# Learn2Slither defaults. Precedence: CLI flag > -config file > these values.
+# PROVISIONAL sections are placeholders so the program runs end-to-end;
+# they are ratified (or replaced) at gates T1-T4 during Phase 4.
+
+[board]
+size = 10            # bonus: any size; vision/state design is size-independent
+green_apples = 2
+red_apples = 1
+initial_length = 3
+
+[goal]
+target_length = 10   # bonus: 15-35
+
+[state]              # dynamic state alphabet (docs/state-design.md)
+warn = true          # d: obstacle at distance 2
+caution = false      # c: obstacle at distance 3 (new distinction)
+green_far = true     # split green into close G / far g
+red_far = true       # split red into close R / far r
+body_far = false     # b: a far obstacle that is body, not wall
+
+[rewards]            # PROVISIONAL -- ratify at GATE T1
+green = 20.0
+red = -10.0
+step = -1.0
+death = -100.0
+win = 100.0          # GATE-E2 board-full victory (provisional)
+
+[exploration]        # PROVISIONAL -- ratify at GATE T2
+strategy = "epsilon_greedy"      # candidate alt: "optimistic"
+epsilon_start = 1.0
+epsilon_min = 0.01
+epsilon_decay = 0.99             # per session
+
+[learning]           # PROVISIONAL -- ratify at GATE T3/T4
+alpha_strategy = "constant"      # candidate alt: "visit_count" (alpha = 1/N)
+alpha = 0.1
+gamma = 0.9
+
+[evaluation]         # evaluation-design.md section 6 knobs
+games = 100
+step_cap = 1000
+
+[gui]
+cell_px = 40
+speed_ms = 150       # delay between moves; needs a human-readable speed

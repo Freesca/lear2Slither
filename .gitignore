@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# models/ is committed on purpose (deliverable trained models) -- never ignore
+snake_den/hub_data.json   # the hub's per-user experiment state (H10)

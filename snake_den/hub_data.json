@@ -1,0 +1,294 @@
+{
+  "models": {
+    "models/new.json": {
+      "sessions": 100,
+      "config": {
+        "board": {
+          "size": 10,
+          "green_apples": 2,
+          "red_apples": 1,
+          "initial_length": 3
+        },
+        "goal": {
+          "target_length": 10
+        },
+        "state": {
+          "warn": true,
+          "caution": false,
+          "green_far": true,
+          "red_far": true,
+          "body_far": false
+        },
+        "rewards": {
+          "green": 20.0,
+          "red": -10.0,
+          "step": -1.0,
+          "death": -100.0,
+          "win": 100.0
+        },
+        "exploration": {
+          "strategy": "epsilon_greedy",
+          "epsilon_start": 1.0,
+          "epsilon_min": 0.01,
+          "epsilon_decay": 0.99
+        },
+        "learning": {
+          "alpha_strategy": "constant",
+          "alpha": 0.1,
+          "gamma": 0.9
+        },
+        "evaluation": {
+          "games": 100,
+          "step_cap": 1000
+        },
+        "gui": {
+          "cell_px": 40,
+          "speed_ms": 150
+        }
+      },
+      "scheme": {
+        "warn": true,
+        "caution": false,
+        "green_far": true,
+        "red_far": true,
+        "body_far": false
+      },
+      "qsummary": {
+        "v": 2,
+        "coverage": 54,
+        "total": 196,
+        "mix": [
+          28,
+          15,
+          10,
+          1
+        ],
+        "fingerprint": [
+          0,
+          0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          -1,
+          0,
+          1,
+          0,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          -1,
+          -1,
+          -1,
+          0,
+          -1,
+          1,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "scores": {
+        "games=100;seed=0;board=10;target=10": {
+          "success_pct": 0.0,
+          "games": 100,
+          "mean_length": 4.0,
+          "mean_duration": 23.18,
+          "target": 10,
+          "full": {
+            "duration": {
+              "max": 1000,
+              "mean": 23.18,
+              "median": 10.0,
+              "std": 99.19426710381315
+            },
+            "games": 100,
+            "length": {
+              "max": 8,
+              "mean": 4.0,
+              "median": 4.0,
+              "std": 1.1634153830577252
+            },
+            "outcomes": {
+              "length_zero": 0,
+              "self": 83,
+              "truncated": 1,
+              "wall": 16,
+              "won": 0
+            },
+            "success_rate": 0.0,
+            "target_length": 10,
+            "type": "summary"
+          }
+        }
+      },
+      "curve": [
+        4,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        5,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        3,
+        4,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        3,
+        3,
+        3,
+        4,
+        3,
+        3,
+        3,
+        3,
+        4,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        5,
+        3,
+        4,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        5,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ]
+    }
+  },
+  "history": [
+    {
+      "id": 1,
+      "type": "train",
+      "model": "models/new.json",
+      "when": "2026-06-25T23:50:54",
+      "sessions": 100,
+      "outcome": {
+        "best_len": 5,
+        "recent_len": 3
+      }
+    },
+    {
+      "id": 1,
+      "type": "eval",
+      "model": "models/new.json",
+      "when": "2026-06-26T00:43:44",
+      "games": 100,
+      "outcome": {
+        "success_pct": 0.0,
+        "target": 10,
+        "mean_length": 4.0
+      }
+    }
+  ],
+  "settings": {
+    "pool_size": null,
+    "models_path": "models",
+    "theme": "pixel",
+    "reduced_motion": true,
+    "scanlines": true
+  },
+  "suites": {}
+}
